@@ -1,0 +1,41 @@
+---
+title: "Practical Machine Learning"
+---
+
+
+#Introduction
+
+Over the past few years the importance of exercise has increased considerably due to various diseases like heart disease, obesity etc. An important way to reduce the risk of these diseases is to do various muscle exercises that increases strength and improves metabolism. But these exercises are only effective if they are performed correctly otherwise they may lead to injuries. Ideal way to exercise is to have an instructor or trainer who can provide guidance. But it may not be feasible to have instructor every time due to cost and availability. Also, personal training is not scalable. Therefore, it is highly desirable to automate the process of training and exercise. In order to automate this process it may be helpful to install on-body sensors on the person while performing the exercise. These sensors capture various body movements and can be used to generate a pattern. The aim of this project is to look for these patterns and determine the correctness of these automated systems. It focuses only three aspects of qualitative exercise: find out the correct way for performing any activity, detect mistakes during execution of an activity and suggest the correct way and provide feedback. The Groupware Inc has performed various experiments by installing on-body sensors of 6 peoples and recording the data from accelerometers, magnetometers and gyroscope. This project is to find out if it is possible to develop a model with this data that can be used to assist these people with their exercise in future and also look at the scalability.       
+
+#Method 
+
+The data is provided by Groupware in form of two .csv files: pml-training.csv and pml-testing.csv. The Training data was first split into of 6 subsets each corresponding to a participant. Now, using these subsets a classification model was built. These are the basic steps followed to build this model:
+
+##1.	Pre Processing
+
+The training data was loaded and the summary of the dataset was generated get a preliminary idea about the dataset. It was observed that some of the predictors were having NA values. Now, I found out the indices of the predictors that contained NA values and removed them from the dataset. Then I looked for the predictors whose values doesn't change much during the course of exercise. For this I used nearZeroVar function from the Caret Package. These predictors were also moved from the analysis since they do not add any information that can help us in building the model. On the other hand if not removed they can increase the biasness and computation time of the model.
+Then I looked at subset of the data by using the head function from the Caret Package. I observed that initial few rows contain data pertaining to time frames and data collection techniques. So these predictors were also removed from the Dataset. Now, I had a refined training set that could be used for developing the model
+
+##2. Cross Validation 
+
+The refined training dataset was subjected to cross validation. This was done to avoid over fitting the model on the training set and reduce the in sample errors. I used k-fold cross-validation technique with repetition. The reason for using k-fold was that it can be very accurate even with less number of folds while Leave-one-out cross-validation can take a lot more computation time.  For cross-Validation trainControl function from Car3et package was used. I used 15 folds with 10 repitions.
+
+##3. Model Fitting
+
+Now for selection of classification model I choose Classification and Regression trees since the number of predictors were large. The common and most important classification trees are bagging, Random Forests and boosting.  In bagging it generates only one tree while Random Forest creates number of independent tress using bootstrapped samples and variables. These independent models are then averaged out or voted to predict the class for a new variable. Boosting (GBM) is an iterative procedure where it weights each of the model fitted on these predictors according to the model errors. Among the last two models I found random forest to be better. This is because Random Forests can be easily used in a distributed fashion due to the fact that they can run in parallel, whereas Gradient Boosted Machines only run trial after trial. Therefore, RF takes less computation time 
+The model was developed using the train function from Caret package. Another advantage for using RF was that of eliminating the weak predictors thereby reducing the biasness they can introduce.
+
+#Results
+
+The model developed was used to predict the method in which the exercise was performed if sensor data was available. When the Random Forest was applied to the training set all the 6 participants, in all the cases accuracy more than 99% was achieved. Then these trained models were applied to predict the test Data given provided in this project. The results were very promising as the predictions were very accurate (all 20 predictions were correct). Thus the out of sample error was very less. 
+
+#Conclusion
+
+The results obtained shows promising development in automating the expertise of a trainer or guide by using various sensors and standard pattern recognition techniques. But I think the model can be developed even better if it contained the training set pertaining to people of large age band. In this study all the participants were between 20-28 years. But otherwise I think this model can help people in assessing their mistakes during exercise and also provide them with valuable feedback in real-time.
+
+
+
+
+
+
+
